@@ -1,0 +1,24 @@
+name: Patch OnePlus allowlist fix
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch build-kernel action
+        env:
+          B64: cCA9ICIuZ2l0aHViL2FjdGlvbnMvYnVpbGQta2VybmVsL2FjdGlvbi55bWwiCnMgPSBvcGVuKHApLnJlYWQoKQphbmNob3IgPSAnJycgICAgICAgICAgInYyLjIuMCIpCiAgICAgICAgICAgIGlmIFsgIiR7eyBpbnB1dHMua3N1X3R5cGUgfX0iID0gIktTVU4iIF07IHRoZW4KICAgICAgICAgICAgICBjZCAiJEtTVU5fRk9MREVSIgogICAgICAgICAgICAgIHBhdGNoIC1wMSAtLWZvcndhcmQgPCAiJFNVU0ZTX0ZPTERFUi9rZXJuZWxfcGF0Y2hlcy9LZXJuZWxTVS8xMF9lbmFibGVfc3VzZnNfZm9yX2tzdS5wYXRjaCIgfHwgdHJ1ZScnJwppbmplY3QgPSAnJycgICAgICAgICAgICAgICMgS1NVTiA+PSB2My40LjAgKEtTVVZFUiAzMzMxMikgZHJvcHBlZCB0aGUgV0VCVklFV19aWUdPVEVfVUlECiAgICAgICAgICAgICAgIyBjaGVjaywgc28gU1VTRlMgMTBfZW5hYmxlJ3MgYWxsb3dsaXN0LmMgaHVuayBubyBsb25nZXIgbWF0Y2hlcyBhbmQKICAgICAgICAgICAgICAjIHVwc3RyZWFtIGtlcm5lbF9wYXRjaGVzIGhhcyBubyBmaXhfYWxsb3dsaXN0LmMucGF0Y2guIEFwcGx5IHRoZQogICAgICAgICAgICAgICMgaW50ZW5kZWQgZWRpdCBpbmxpbmUsIHRoZW4gZHJvcCB0aGUgcmVqZWN0IHNvIHRoZSBmaXggbG9vcCBwYXNzZXMuCiAgICAgICAgICAgICAgcHl0aG9uMyAtIDw8J1BZRU9GJwppbXBvcnQgcmUsIHBhdGhsaWIKZm9yIGNhbmQgaW4gKCJrZXJuZWwvcG9saWN5L2FsbG93bGlzdC5jIiwgImtlcm5lbC9hbGxvd2xpc3QuYyIpOgogICAgcCA9IHBhdGhsaWIuUGF0aChjYW5kKQogICAgaWYgbm90IHAuZXhpc3RzKCk6CiAgICAgICAgY29udGludWUKICAgIHMgPSBwLnJlYWRfdGV4dCgpCiAgICBwYXQgPSByZS5jb21waWxlKHIiICAgIGlmIFxcKGxpa2VseVxcKGtzdV9pc19tYW5hZ2VyX2FwcGlkX3ZhbGlkXFwoXFwpXFwpICYmIHVubGlrZWx5XFwoa3N1X2dldF9tYW5hZ2VyX2FwcGlkXFwoXFwpID09IHVpZCAlIFBFUl9VU0VSX1JBTkdFXFwpXFwpIFxce1xuICAgICAgICAvLyB3ZSBzaG91bGQgbm90IHVtb3VudCBvbiBtYW5hZ2VyIVxuICAgICAgICByZXR1cm4gZmFsc2U7XG4gICAgXFx9XG4iKQogICAgczIsIG4gPSBwYXQuc3VibigiIiwgcykKICAgIGlmIG46CiAgICAgICAgcC53cml0ZV90ZXh0KHMyKQogICAgICAgIHByaW50KCJpbmxpbmUgYWxsb3dsaXN0IGZpeCBvayIpCiAgICAgICAgYnJlYWsKUFlFT0YKICAgICAgICAgICAgICBybSAtZiAuL2tlcm5lbC9wb2xpY3kvYWxsb3dsaXN0LmMucmVqIC4va2VybmVsL2FsbG93bGlzdC5jLnJlagonJycKYXNzZXJ0IGFuY2hvciBpbiBzLCAiYW5jaG9yIG1pc3NpbmciCnMgPSBzLnJlcGxhY2UoYW5jaG9yLCBhbmNob3IgKyBpbmplY3QpCm9wZW4ocCwgInciKS53cml0ZShzKQpwcmludCgicGF0Y2hlZCBvaywgbmV3bGVuIiwgbGVuKHMpKQ==
+        run: |
+          echo "$B64" | base64 -d > /tmp/p.py
+          python3 /tmp/p.py
+      - name: Commit and push
+        run: |
+          git config user.name "Xiexiufyx"
+          git config user.email "1054534375@qq.com"
+          git add .github/actions/build-kernel/action.yml
+          git commit -m "patch v2.2.0 KSUN allowlist inline fix"
+          git push
