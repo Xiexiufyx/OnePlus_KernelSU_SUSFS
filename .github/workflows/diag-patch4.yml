@@ -1,0 +1,28 @@
+name: Patch build workflow with diagnostics 4
+on:
+  workflow_dispatch:
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply patch
+        env:
+          B64: aW1wb3J0IHJlCnAgPSAnLmdpdGh1Yi93b3JrZmxvd3MvYnVpbGQta2VybmVsLXJlbGVhc2UueW1sJwpzID0gb3BlbihwLCBlbmNvZGluZz0ndXRmLTgnKS5yZWFkKCkKYW5jaG9yID0gJyAgICAgIC0gbmFtZTog8J+TiiBCdWlsZCBzdGF0aXN0aWNzJwpkaWFnID0gJycnICAgICAgLSBuYW1lOiDwn5OLIER1bXAgYnVpbGQgZGlhZ25vc3RpY3MgKG9uIGZhaWx1cmUpCiAgICAgICAgaWY6IGZhaWx1cmUoKSAmJiBzdGVwcy5idWlsZC5jb25jbHVzaW9uID09ICdmYWlsdXJlJwogICAgICAgIHNoZWxsOiBiYXNoCiAgICAgICAgcnVuOiB8CiAgICAgICAgICB7CiAgICAgICAgICAgIGVjaG8gIiMjIPCflLQgQnVpbGQg5aSx6LSl6K+K5patIgogICAgICAgICAgICBlY2hvICIqKldvcmtzcGFjZSoqOiAkR0lUSFVCX1dPUktTUEFDRSIKICAgICAgICAgICAgZWNobyAiIgogICAgICAgICAgICBlY2hvICIjIyMg6aG25bGC55uu5b2VIgogICAgICAgICAgICBscyAiJEdJVEhVQl9XT1JLU1BBQ0UiIDI+L2Rldi9udWxsIHwgaGVhZCAtNDAKICAgICAgICAgICAgZWNobyAiIgogICAgICAgICAgICBlY2hvICIjIyMgc3VzZnM0a3N1IOebruW9lSIKICAgICAgICAgICAgbHMgIiRHSVRIVUJfV09SS1NQQUNFL3N1c2ZzNGtzdSIgMj4vZGV2L251bGwgfCBoZWFkIC0yMCB8fCBlY2hvICIo5pegIHN1c2ZzNGtzdSDnm67lvZUpIgogICAgICAgICAgICBlY2hvICIiCiAgICAgICAgICAgIGVjaG8gIiMjIyBzdXNmc19maXhfcGF0Y2hlc++8iG5leHTvvIkiCiAgICAgICAgICAgIGxzICIkR0lUSFVCX1dPUktTUEFDRS9rZXJuZWxfcGF0Y2hlcy9uZXh0L3N1c2ZzX2ZpeF9wYXRjaGVzIiAyPi9kZXYvbnVsbCB8fCBlY2hvICIo5peg6K+l55uu5b2VKSIKICAgICAgICAgICAgZWNobyAiIgogICAgICAgICAgICBlY2hvICIjIyMgdjIuMi4wIGZpeCDmlofku7YiCiAgICAgICAgICAgIGxzICIkR0lUSFVCX1dPUktTUEFDRS9rZXJuZWxfcGF0Y2hlcy9uZXh0L3N1c2ZzX2ZpeF9wYXRjaGVzL3YyLjIuMCIgMj4vZGV2L251bGwgfHwgZWNobyAiKOaXoCB2Mi4yLjAg55uu5b2VKSIKICAgICAgICAgICAgZWNobyAiIgogICAgICAgICAgICBlY2hvICIjIyMgc3VzZnMuaCDniYjmnKzvvIjoi6Xlt7LlpI3liLbvvIkiCiAgICAgICAgICAgIGdyZXAgJyNkZWZpbmUgU1VTRlNfVkVSU0lPTicgIiRHSVRIVUJfV09SS1NQQUNFL2tlcm5lbF9wbGF0Zm9ybS9jb21tb24vaW5jbHVkZS9saW51eC9zdXNmcy5oIiAyPi9kZXYvbnVsbCB8fCBlY2hvICIo5pegIHN1c2ZzLmgpIgogICAgICAgICAgICBlY2hvICIiCiAgICAgICAgICAgIGVjaG8gIiMjIyBidWlsZC5sb2cg5bC+6YOo77yI6Iul5a2Y5Zyo77yJIgogICAgICAgICAgICB0YWlsIC1uIDgwICIkR0lUSFVCX1dPUktTUEFDRS9rZXJuZWxfcGxhdGZvcm0vY29tbW9uL2J1aWxkLmxvZyIgMj4vZGV2L251bGwgfHwgZWNobyAiKOaXoCBidWlsZC5sb2cpIgogICAgICAgICAgfSA+PiAiJEdJVEhVQl9TVEVQX1NVTU1BUlkiCgonJycKaWYgYW5jaG9yIGluIHM6CiAgICBzID0gcy5yZXBsYWNlKGFuY2hvciwgZGlhZyArIGFuY2hvciwgMSkKICAgIG9wZW4ocCwgJ3cnLCBlbmNvZGluZz0ndXRmLTgnLCBuZXdsaW5lPSdcbicpLndyaXRlKHMpCiAgICBwcmludCgnUEFUQ0hFRCcpCmVsc2U6CiAgICBwcmludCgnQU5DSE9SIE5PVCBGT1VORCcp
+        run: |
+          echo "$B64" | base64 -d > /tmp/patch_diag.py
+          python3 /tmp/patch_diag.py
+      - name: Verify
+        run: |
+          grep -n "Dump build diagnostics" .github/workflows/build-kernel-release.yml || echo "PATCH FAILED"
+      - name: Commit and push
+        run: |
+          git config user.name "Xiexiufyx"
+          git config user.email "1054534375@qq.com"
+          git add -A
+          git commit -m "add failure diagnostics to build workflow"
+          git push origin HEAD:main
