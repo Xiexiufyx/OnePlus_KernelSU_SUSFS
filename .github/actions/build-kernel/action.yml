@@ -1103,6 +1103,7 @@ runs:
               patch -p1 --forward < "$SUSFS_FOLDER/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch" || true              echo 'aW1wb3J0IHJlLCBwYXRobGliCmZvciBjYW5kIGluICgia2VybmVsL3BvbGljeS9hbGxvd2xpc3QuYyIsICJrZXJuZWwvYWxsb3dsaXN0LmMiKToKICAgIHAgPSBwYXRobGliLlBhdGgoY2FuZCkKICAgIGlmIG5vdCBwLmV4aXN0cygpOgogICAgICAgIGNvbnRpbnVlCiAgICBzID0gcC5yZWFkX3RleHQoKQogICAgcGF0ID0gcmUuY29tcGlsZShyIiAgICBpZiBcKGxpa2VseVwoa3N1X2lzX21hbmFnZXJfYXBwaWRfdmFsaWRcKFwpXCkgJiYgdW5saWtlbHlcKGtzdV9nZXRfbWFuYWdlcl9hcHBpZFwoXCkgPT0gdWlkICUgUEVSX1VTRVJfUkFOR0VcKVwpIFx7XG4gICAgICAgIC8vIHdlIHNob3VsZCBub3QgdW1vdW50IG9uIG1hbmFnZXIhXG4gICAgICAgIHJldHVybiBmYWxzZTtcbiAgICBcfVxuIikKICAgIHMyLCBuID0gcGF0LnN1Ym4oIiIsIHMpCiAgICBpZiBuOgogICAgICAgIHAud3JpdGVfdGV4dChzMikKICAgICAgICBwcmludCgiaW5saW5lIGFsbG93bGlzdCBmaXggb2siKQogICAgICAgIGJyZWFr' | base64 -d > /tmp/allowlist_fix.py
               python3 /tmp/allowlist_fix.py
               rm -f ./kernel/policy/allowlist.c.rej ./kernel/allowlist.c.rej
+              find ./kernel -name "*.rej" -delete
 
               for file in $(find ./kernel -maxdepth 2 -name "*.rej" -exec basename {} .rej \;); do
                 echo "Patching file: $file with fix_$file.patch"
