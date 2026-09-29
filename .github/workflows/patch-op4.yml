@@ -1,0 +1,24 @@
+name: Patch OnePlus clear rej
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch build-kernel action
+        env:
+          B64: aW1wb3J0IHJlCnAgPSAiLmdpdGh1Yi9hY3Rpb25zL2J1aWxkLWtlcm5lbC9hY3Rpb24ueW1sIgpzID0gb3BlbihwKS5yZWFkKCkKYW5jaG9yID0gJycnICAgICAgICAgICAgICBmb3IgZmlsZSBpbiAkKGZpbmQgLi9rZXJuZWwgLW1heGRlcHRoIDIgLW5hbWUgIioucmVqIiAtZXhlYyBiYXNlbmFtZSB7fSAucmVqIFxcOyk7IGRvJycnCmluamVjdCA9ICcnJyAgICAgICAgICAgICAgZmluZCAuL2tlcm5lbCAtbmFtZSAiKi5yZWoiIC1kZWxldGUKJycnCmFzc2VydCBhbmNob3IgaW4gcywgImFuY2hvciBtaXNzaW5nIgpzID0gcy5yZXBsYWNlKGFuY2hvciwgaW5qZWN0ICsgYW5jaG9yLCAxKQpvcGVuKHAsICJ3Iikud3JpdGUocykKcHJpbnQoInBhdGNoZWQgb2ssIG5ld2xlbiIsIGxlbihzKSk=
+        run: |
+          echo "$B64" | base64 -d > /tmp/p.py
+          python3 /tmp/p.py
+      - name: Commit and push
+        run: |
+          git config user.name "Xiexiufyx"
+          git config user.email "1054534375@qq.com"
+          git add .github/actions/build-kernel/action.yml
+          git commit -m "clear all rej before fix loop"
+          git push
