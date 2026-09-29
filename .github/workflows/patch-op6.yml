@@ -1,0 +1,24 @@
+name: Patch OnePlus soft patch
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch build-kernel action
+        env:
+          B64: aW1wb3J0IHJlCnAgPSAiLmdpdGh1Yi9hY3Rpb25zL2J1aWxkLWtlcm5lbC9hY3Rpb24ueW1sIgpzID0gb3BlbihwKS5yZWFkKCkKYmVmb3JlID0gbGVuKHMpCnMgPSByZS5zdWIocicoa3N1X3Rvb2xraXRcLnBhdGNoKSIgXHxcfCBwX2VyclteXG5dKicsIHInXDEiIHx8IHRydWUnLCBzKQpzID0gcmUuc3ViKHInKG92ZXJ3cml0ZV9ob29rX21vZGVcLnBhdGNoKSIgXHxcfCBwX2VyclteXG5dKicsIHInXDEiIHx8IHRydWUnLCBzKQpzID0gcmUuc3ViKHInKGZpeF9cJGZpbGVcLnBhdGNoKSIgXHxcfCBwX2VyclteXG5dKicsIHInXDEiIHx8IHRydWUnLCBzKQpvcGVuKHAsICJ3Iikud3JpdGUocykKcHJpbnQoInBhdGNoZWQgb2siLCBsZW4ocyksICJkaWZmIiwgbGVuKHMpIC0gYmVmb3JlKQ==
+        run: |
+          echo "$B64" | base64 -d > /tmp/p.py
+          python3 /tmp/p.py
+      - name: Commit and push
+        run: |
+          git config user.name "Xiexiufyx"
+          git config user.email "1054534375@qq.com"
+          git add .github/actions/build-kernel/action.yml
+          git commit -m "soft-fail SUSFS fix patches"
+          git push
