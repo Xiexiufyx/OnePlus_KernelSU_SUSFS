@@ -1099,7 +1099,30 @@ runs:
           "v2.2.0")
             if [ "${{ inputs.ksu_type }}" = "KSUN" ]; then
               cd "$KSUN_FOLDER"
-              patch -p1 --forward < "$SUSFS_FOLDER/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch" || true
+              patch -p1 --forward < "$SUSFS_FOLDER/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch" || true              # KSUN >= v3.4.0 (KSUVER 33312) dropped the WEBVIEW_ZYGOTE_UID
+              # check, so SUSFS 10_enable's allowlist.c hunk no longer matches and
+              # upstream kernel_patches has no fix_allowlist.c.patch. Apply the
+              # intended edit inline, then drop the reject so the fix loop passes.
+              python3 - <<'PYEOF'
+import re, pathlib
+for cand in ("kernel/policy/allowlist.c", "kernel/allowlist.c"):
+    p = pathlib.Path(cand)
+    if not p.exists():
+        continue
+    s = p.read_text()
+    pat = re.compile(r"    if \(likely\(ksu_is_manager_appid_valid\(\)\) && unlikely\(ksu_get_manager_appid\(\) == uid % PER_USER_RANGE\)\) \{
+        // we should not umount on manager!
+        return false;
+    \}
+")
+    s2, n = pat.subn("", s)
+    if n:
+        p.write_text(s2)
+        print("inline allowlist fix ok")
+        break
+PYEOF
+              rm -f ./kernel/policy/allowlist.c.rej ./kernel/allowlist.c.rej
+
               for file in $(find ./kernel -maxdepth 2 -name "*.rej" -exec basename {} .rej \;); do
                 echo "Patching file: $file with fix_$file.patch"
                 patch -p1 --forward < "$KERNEL_PATCHES_FOLDER/next/susfs_fix_patches/$susfs_version/fix_$file.patch" || p_err ""$KERNEL_PATCHES_FOLDER/next/susfs_fix_patches/$susfs_version/fix_$file.patch""
