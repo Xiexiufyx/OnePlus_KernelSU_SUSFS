@@ -1,0 +1,24 @@
+name: Patch OnePlus clear rej v2
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch build-kernel action
+        env:
+          B64: cCA9ICIuZ2l0aHViL2FjdGlvbnMvYnVpbGQta2VybmVsL2FjdGlvbi55bWwiCnMgPSBvcGVuKHApLnJlYWQoKQphbmNob3IgPSAnJycgICAgICAgICAgICAgIHJtIC1mIC4va2VybmVsL3BvbGljeS9hbGxvd2xpc3QuYy5yZWogLi9rZXJuZWwvYWxsb3dsaXN0LmMucmVqCicnJwppbmplY3QgPSAnJycgICAgICAgICAgICAgIGZpbmQgLi9rZXJuZWwgLW5hbWUgIioucmVqIiAtZGVsZXRlCicnJwphc3NlcnQgYW5jaG9yIGluIHMsICJhbmNob3IgbWlzc2luZyIKcyA9IHMucmVwbGFjZShhbmNob3IsIGFuY2hvciArIGluamVjdCwgMSkKb3BlbihwLCAidyIpLndyaXRlKHMpCnByaW50KCJwYXRjaGVkIG9rLCBuZXdsZW4iLCBsZW4ocykp
+        run: |
+          echo "$B64" | base64 -d > /tmp/p.py
+          python3 /tmp/p.py
+      - name: Commit and push
+        run: |
+          git config user.name "Xiexiufyx"
+          git config user.email "1054534375@qq.com"
+          git add .github/actions/build-kernel/action.yml
+          git commit -m "clear rej in v2.2.0 branch after allowlist fix"
+          git push
