@@ -1,0 +1,20 @@
+name: Patch SUSFS Source
+on: workflow_dispatch
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: |
+          echo 'cCA9ICcuZ2l0aHViL2FjdGlvbnMvYnVpbGQta2VybmVsL2FjdGlvbi55bWwnCnMgPSBvcGVuKHAsIGVuY29kaW5nPSd1dGYtOCcpLnJlYWQoKQpvbGRfdXJsID0gJ3JldHJ5X2ZldGNoX2FyY2hpdmUgImh0dHBzOi8vZ2l0bGFiLmNvbS9zaW1vbnB1bmsvc3VzZnM0a3N1LmdpdCInCm5ld191cmwgPSAncmV0cnlfZmV0Y2hfYXJjaGl2ZSAiaHR0cHM6Ly9naXRodWIuY29tL1NoaXJrTmVrby9zdXNmczRrc3UuZ2l0IicKYXNzZXJ0IG9sZF91cmwgaW4gcywgJ3VybCBwYXR0ZXJuIG5vdCBmb3VuZCcKcyA9IHMucmVwbGFjZShvbGRfdXJsLCBuZXdfdXJsKQpvbGRfYmxrID0gJ2lmIFtbICIkdXJsIiA9PSAqImdpdGh1Yi5jb20iKiBdXTsgdGhlblxuICAgICAgICAgICAgICBkb3dubG9hZF91cmw9IiR7dXJsJS5naXR9L2FyY2hpdmUvcmVmcy9oZWFkcy8ke2JyYW5jaH0udGFyLmd6IlxuZWxpZiBbWyAiJHVybCIgPT0gKiJnaXRsYWIuY29tIiogXV07IHRoZW4nCm5ld19ibGsgPSAnaWYgW1sgIiR1cmwiID09ICoiZ2l0aHViLmNvbSIqIF1dOyB0aGVuXG4gICAgICAgICAgICAgIGlmIFtbICIkYnJhbmNoIiA9fiBeWzAtOWEtZl17NDB9JCBdXTsgdGhlblxuICAgICAgICAgICAgICAgIGRvd25sb2FkX3VybD0iJHt1cmwlLmdpdH0vYXJjaGl2ZS8ke2JyYW5jaH0udGFyLmd6IlxuICAgICAgICAgICAgICBlbHNlXG4gICAgICAgICAgICAgICAgZG93bmxvYWRfdXJsPSIke3VybCUuZ2l0fS9hcmNoaXZlL3JlZnMvaGVhZHMvJHticmFuY2h9LnRhci5neiJcbiAgICAgICAgICAgICAgZmlcbmVsaWYgW1sgIiR1cmwiID09ICoiZ2l0bGFiLmNvbSIqIF1dOyB0aGVuJwphc3NlcnQgb2xkX2JsayBpbiBzLCAnYmxvY2sgcGF0dGVybiBub3QgZm91bmQnCnMgPSBzLnJlcGxhY2Uob2xkX2JsaywgbmV3X2JsaykKb3BlbihwLCAndycsIGVuY29kaW5nPSd1dGYtOCcpLndyaXRlKHMpCnByaW50KCdQQVRDSEVEIE9LJyk=' | base64 -d > /tmp/patch.py
+          python3 /tmp/patch.py
+      - name: Commit and push
+        run: |
+          git config user.name "Xiexiufyx"
+          git config user.email "1054534375@qq.com"
+          git add .github/actions/build-kernel/action.yml
+          git commit -m "Switch SUSFS source to GitHub mirror (ShirkNeko)"
+          git push
