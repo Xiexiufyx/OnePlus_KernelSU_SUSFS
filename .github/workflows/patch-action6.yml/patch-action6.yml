@@ -1,0 +1,29 @@
+name: Patch action with diagnostics
+on:
+  workflow_dispatch:
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply patch
+        env:
+          B64: aW1wb3J0IHJlCnAgPSAnLmdpdGh1Yi9hY3Rpb25zL2J1aWxkLWtlcm5lbC9hY3Rpb24ueW1sJwpzID0gb3BlbihwLCBlbmNvZGluZz0ndXRmLTgnKS5yZWFkKCkKIyAxKSDlnKggQXBwbHkgU1VTRlMgUGF0Y2hlcyDnmoQgc2V0IC1ldW8gcGlwZWZhaWwg5ZCO5YqgIHBfZXJyIOWHveaVsApvbGQgPSAnICAgICAgICBzZXQgLWV1byBwaXBlZmFpbFxuICAgICAgICBlY2hvICI6Omdyb3VwOjpBcHBseSBTVVNGUyBwYXRjaGVzIicKbmV3ID0gJyAgICAgICAgc2V0IC1ldW8gcGlwZWZhaWxcbiAgICAgICAgcF9lcnIoKSB7IGVjaG8gIjo6ZXJyb3I6OlNVU0ZTIFBBVENIIEZBSUxFRDogJDEgKGxpbmUgJHtMSU5FTk99KSI7IGV4aXQgMTsgfVxuICAgICAgICBlY2hvICI6Omdyb3VwOjpBcHBseSBTVVNGUyBwYXRjaGVzIicKYXNzZXJ0IG9sZCBpbiBzLCAiYW5jaG9yMSBub3QgZm91bmQiCnMgPSBzLnJlcGxhY2Uob2xkLCBuZXcsIDEpCiMgMikg57uZ5omA5pyJ5pyq5bimIHx8IHRydWUg55qEIHBhdGNoIC1wMSDooYzliqAgfHwgcF9lcnIgIjzmupDmlofku7Y+IgpvdXQgPSBbXQpmb3IgbGluZSBpbiBzLnNwbGl0KCdcbicpOgogICAgbSA9IHJlLnNlYXJjaChyJ3BhdGNoIC1wMSAtLWZvcndhcmQoPzogLS1mdXp6PTMpPyA8ICguKj8pKD86XHMqXHxcfFxzKnRydWUpP1xzKiQnLCBsaW5lKQogICAgaWYgbSBhbmQgJ3x8IHRydWUnIG5vdCBpbiBsaW5lIGFuZCAncF9lcnInIG5vdCBpbiBsaW5lOgogICAgICAgIHNyYyA9IG0uZ3JvdXAoMSkuc3RyaXAoKQogICAgICAgIGxpbmUgPSBsaW5lLnJzdHJpcCgpICsgZicgfHwgcF9lcnIgIntzcmN9IicKICAgIG91dC5hcHBlbmQobGluZSkKcyA9ICdcbicuam9pbihvdXQpCm9wZW4ocCwgJ3cnLCBlbmNvZGluZz0ndXRmLTgnLCBuZXdsaW5lPSdcbicpLndyaXRlKHMpCnByaW50KCdQQVRDSCBPSywgcF9lcnIgY291bnQ6Jywgcy5jb3VudCgncF9lcnInKSk=
+
+        run: |
+          echo "$B64" | base64 -d > /tmp/p.py
+          python3 /tmp/p.py
+      - name: Verify
+        run: |
+          grep -c "p_err" .github/actions/build-kernel/action.yml || true
+      - name: Commit and push
+        run: |
+          git config user.name "Xiexiufyx"
+          git config user.email "1054534375@qq.com"
+          git add -A
+          git commit -m "add patch failure diagnostics to build-kernel action"
+          git push origin HEAD:main
